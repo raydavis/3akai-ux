@@ -278,6 +278,8 @@ sakai.site = function(){
 		// Load site navigation
 		sakai.site.loadSiteNavigation();
 		
+		// load group creation and viewing 
+		sakai.peoplePicker.init();
 	};
 	
 	// Load Navigation
