@@ -277,7 +277,12 @@ sakai.site = function(){
 		
 		// Load site navigation
 		sakai.site.loadSiteNavigation();
-		
+        
+        // Load group creation code
+        sakai.peoplePicker.init();
+        
+        // Load group viewer code
+        sakai.groupViewer.init();
 	};
 	
 	// Load Navigation

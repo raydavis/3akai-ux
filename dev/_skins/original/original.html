@@ -20,6 +20,7 @@
 	<link rel="stylesheet" type="text/css" href="/dev/_css/sakai/sakai.site.css"/>
 	<link rel="stylesheet" type="text/css" href="/dev/_css/sakai/sakai.dashboard.css"/>
 	<link rel="stylesheet" type="text/css" href="/dev/_css/sakai/sakai.3.css" />
+	<link rel="stylesheet" type="text/css" href="/apps/gnr3/ppkr/sakai-people-picker.css" />
 	
 	<script type="text/javascript" language="JavaScript" src="/dev/_configuration/widgets.js"></script>
 	<script type="text/javascript" language="JavaScript" src="/dev/_configuration/config.js"></script>
@@ -40,6 +41,12 @@
 	<script type="text/javascript" language="JavaScript" src="/dev/_lib/sakai_util/querystring.js"></script>
 	<script type="text/javascript" language="JavaScript" src="/dev/_lib/sakai_util/i18n.js"></script>
 	
+	<!-- auto-complete from http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
+	  license MIT/GPL -->
+	<script type="text/javascript" language="JavaScript" src="/apps/gnr3/ppkr/lib/jquery-autocomplete/jquery.autocomplete.js"></script>
+	
+	<script type="text/javascript" language="JavaScript" src="/apps/gnr3/ppkr/sakai-people-picker.js"></script>
+	<script type="text/javascript" language="JavaScript" src="/apps/gnr3/ppkr/js/sakai-group-viewer.js"></script>
     </head>
     
     <body id="root" class="fl-centered fl-container sakai_site i18nable">
@@ -104,6 +111,8 @@
 							<li><a id="site_management_members_link" href="/dev/site_management_members_manage.html?siteid=">Members</a></li>
 							<li><a id="site_management_appearance_link" href="/dev/site_management_appearance.html?siteid=">Appearance</a></li>
 							<li><a href="javascript:;" id="edit_sidebar">Edit Sidebar</a></li>
+							<li><a href="javascript:;" id="create_group">Create Group</a></li>
+							<li><a href="javascript:;" id="view_groups">View Groups</a></li>
 						</ul>
 				    </div>
 					    
@@ -814,5 +823,9 @@
 		
 		<script type="text/javascript" src="/dev/_javascript/site.js"></script>
 		
+		<script type="text/javascript" src="/dev/_javascript/groups-init.js"></script>
+		<div id="results"></div>
+		<div id="picker"></div>
+
     </body>
 </html>
