@@ -57,7 +57,7 @@ var sakai = sakai || {};
         });
         
         $("#view_groups").click(function () {
-            //myPicker.refreshData();
+            myGroupViewer.loadGroups();
             myGroupViewer.open();
         });
         
