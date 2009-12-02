@@ -1852,8 +1852,8 @@ sakai.chat3 = function(tuid, placement, showSettings){
 		return;
 	}
 	else {
-		loadPersistence();
-		checkOnline();
+		//loadPersistence();
+		//checkOnline();
 		doInit();
 	}
 	

@@ -3,23 +3,20 @@
  * myPicker used primarily for debug, should be pulled from global namespace
  */
 
-var peoplePicker;
+var peoplePicker, myGroupViewer;
 
 var sakai = sakai || {};
 
 (function ($) {
     
-    /**
-     * Initializes the Infusion Uploader for the AddImages page.
-     */
     var initPeoplePicker = function () {
-        $("#picker").load("/apps/gnr3/ppkr/sakai-people-picker.html #sakai-people-picker-dialog", null, function () {
+        $("#picker").load("/apps/gnr3/ppkr/sakai-people-picker.html #sakai-group-management", null, function () {
             peoplePicker = sakai.peoplePicker("#sakai-people-picker", {
                 pickerDialog: {
                     type: "sakai.sakaiDialog",
                     options: {
-                        autoOpen: true,
-                        width: 560
+                        autoOpen: false,
+                        width: 580
                     }
                 },
                 dataURL:"/sites/" + sakai.site.currentsite.id + ".gnr3.groups.json",
@@ -37,44 +34,33 @@ var sakai = sakai || {};
                         });
                     }              
                 }                           
-            });  
+            }); 
+            myGroupViewer = sakai.groupViewer("#group-viewer", {
+                dataURL: "/sites/" + sakai.site.currentsite.id + ".gnr3.groups.json",
+                dialog: {
+                    type: "sakai.sakaiDialog",
+                    options: {
+                        title: "View All Groups",
+                        autoOpen: false,
+                        width: 300
+                    }
+                }
+            }); 
         });
-    };
+    };    
     
-    var initViewGroups = function () {
-        $("#veiwer").load("/apps/gnr3/ppkr/group-viewer.html #group-viewer", null, function () {
-            myGroupViewer = sakai.groupViewer("#group-viewer");
-        });
-    };
-    
-    var openPeoplePicker = function () {
-        if (peoplePicker) {
-            //myPicker.refreshData();
-            peoplePicker.open();
-            
-        } else {
-            initPeoplePicker();
-        }
-    }
-    
-    var openGroupViewer = function () {
-        if (peoplePicker) {
-            //myPicker.refreshData();
-            myGroupViewer.open();
-            
-        } else {
-            initViewGroups();
-        }
-    }
 
     sakai.peoplePicker.init = function () {
+        initPeoplePicker();
         $("#create_group").click(function () {
-            openPeoplePicker();
+            peoplePicker.open();
         });
         
         $("#view_groups").click(function () {
-            openGroupViewer();
+            //myPicker.refreshData();
+            myGroupViewer.open();
         });
+        
      };
     
     

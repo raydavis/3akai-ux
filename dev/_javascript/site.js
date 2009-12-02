@@ -284,9 +284,6 @@ sakai.site = function(){
         
         // Load group creation code
         sakai.peoplePicker.init();
-        
-        // Load group viewer code
-        sakai.groupViewer.init();
 	};
 	
 	/**
