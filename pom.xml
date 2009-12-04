@@ -45,7 +45,7 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Sling-Initial-Content>SLING-INF/content;overwrite=true</Sling-Initial-Content>
+            <Sling-Initial-Content>SLING-INF/content;overwrite:=true</Sling-Initial-Content>
           </instructions>
         </configuration>
       </plugin>
