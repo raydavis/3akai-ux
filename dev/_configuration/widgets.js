@@ -58,6 +58,20 @@ var Widgets = {
 			siteportal:0,
 			img:"/dev/img/sites.png"
 		},
+		googlemaps :
+		{
+			description:"Google maps \r\n",
+			iframe:0,
+			url:"/devwidgets/googlemaps/googlemaps.html",
+			name:"Googlemaps",
+			id:"googlemaps",
+			personalportal:0,
+			siteportal:0,
+			ca:1,
+			showinmedia:0,
+			showinsakaigoodies:1,
+			img:"/devwidgets/googlemaps/images/googlemaps.png"
+		},
 		sites :
 		{
 			description:"Listing of the sites I'm a member of\r\n",
@@ -98,6 +112,28 @@ var Widgets = {
 			url:"/devwidgets/camtoolscourses/camtoolscourses.html",
 			name:"Camtools 2008 Courses &amp; Projects",
 			id:"camtoolscourses",
+			personalportal:1,
+			siteportal:0,
+			img:"/dev/img/sites.png"
+		},
+		s23courses :
+		{
+			description:"Your courses &amp; sites for Sakai2\r\n",
+			iframe:0,
+			url:"/devwidgets/s23/s23courses/s23courses.html",
+			name:"Sakai 2 Courses &amp; Projects",
+			id:"s23courses",
+			personalportal:1,
+			siteportal:0,
+			img:"/dev/img/sites.png"
+		},
+		s23tools :
+		{
+			description:"Listing of the tools from Sakai 2\r\n",
+			iframe:0,
+			url:"/devwidgets/s23/s23tools/s23tools.html",
+			name:"Sakai 2 - Tools",
+			id:"s23tools",
 			personalportal:1,
 			siteportal:0,
 			img:"/dev/img/sites.png"
