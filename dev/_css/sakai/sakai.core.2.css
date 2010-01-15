@@ -9,9 +9,6 @@ html {
 .groupWrapper .widget1:focus {
 	outline: 1px dotted #CCCCCC;
 }
-.i18nable {
-	display:none;
-}
 
 .mceContentBody {
 	display: block !important;
@@ -192,27 +189,33 @@ body.search-container .explore_nav .explore #nav_search_link a {
 
 /*** Top Right Navbar ***/
 .explore_nav .personal-container {
-	margin-top: .8em;
+	margin-top: 10px;
 	background: url('../../_images/topBar_tr.png') top right no-repeat;
 	padding-right: 5px;
 	overflow: hidden;
-	height: 25px;
 }
 .explore_nav .personal {
-	padding: 5px 10px;
+	padding: 4px 0 0 5px;
 	margin: 0;
 	background: url('../../_images/topBar_tl.png') top left no-repeat;
-	min-height: 1em;
+	min-height: 30px;
 	}
 .explore_nav .personal li a {
-    font-size:0.95em;
+    font-size:0.9em;
     padding:0 5px 0 7px;
     border-left: 1px solid #666a6d;
     color: #fff;
-	}
-.explore_nav .personal li strong {
+}
+.explore_nav .personal li span {
 	color: #fff;
+	font-size: 0.9em;
 	}
+.explore_nav .user_link span {
+	background: url('../../_images/white_subnav_arrow.png') bottom right no-repeat;
+	padding-right: 17px;
+	padding-left: 5px;
+}
+
 .explore_nav .personal li.last a{
 	 border:none;
 	 padding-right:0
@@ -225,7 +228,7 @@ body.search-container .explore_nav .explore #nav_search_link a {
 .explore_nav .personal .mail img {position: relative; top: -1px;}
 .explore_nav_selected_arrow {margin: 12px 0 0 5px;}
 .explore_nav_selected {background-color: #878A8C; height:32px;}
-.explore_nav_selected_dropdown {height: 38px; background-color: #fff !important;}
+.explore_nav_selected_dropdown {height: 46px; background-color: #fff !important;}
 .explore_nav_selected_dropdown span {color: #595e62 !important;}
 
 #widget_chat {
@@ -241,7 +244,7 @@ body.search-container .explore_nav .explore #nav_search_link a {
 
 
 /* HEADER */
-.header { padding: 12px 0 0 0; }
+.header { padding: 5px 0 0 0; }
 .header .fixed-container { background: #fff url('../../_images/header_l.png') top left no-repeat; }
 .header .fixed-container .decor { background: url('../../_images/header_r.png') top right no-repeat; height: 5px; margin-right: -20px; }
 
@@ -832,6 +835,81 @@ body.search-container .explore_nav .explore #nav_search_link a {
 #main-content-div {
 	padding-top: 10px;	
 }
+
+/* CONTENT */
+.widget-content .fixed-container {background-color: #fff; padding-bottom: 20px;}
+
+/* GENERAL WIDGET CSS */
+.fl-widget {margin-bottom: 10px;}
+.fl-widget .fl-widget-titlebar h2 {padding-left:3px;}
+.fl-widget {padding: 0;}
+.fl-widget .fl-widget-titlebar {background: url(../../_images/block_tr.png) top right no-repeat; padding: 0 4px 0 0; width: auto; cursor: move;}
+.fl-widget .fl-widget-titlebar .widget-titlebar-inner {background: url(../../_images/block_tl.png) top left no-repeat; height: 50px;}
+.fl-widget .fl-widget-titlebar .widget_title {color: #878a8c; font-size: 1.0em; float: left; padding-left: 43px; line-height: 50px;}
+.fl-widget .fl-widget-titlebar .settings {background-image: url(../../_images/edit_icon_widget.png); position: relative; height: 18px; background-repeat: no-repeat; margin-top: 15px;}
+
+.fl-widget .fl-widget-options {margin: 0;background: url(../../_images/block_br.png) top right no-repeat; padding: 0 8px 0 0;}
+.fl-widget .fl-widget-options .widget-options-inner {background: url(../../_images/block_bl.png) top left no-repeat; height: 40px; width: auto; padding: 0 0 0 14px;}
+.fl-widget .fl-widget-options ul {margin: 0; padding: 0;}
+.fl-widget .fl-widget-options ul li {float: left; margin: 0; padding: 16px 6px 0 6px;}
+.fl-widget .fl-widget-options ul li a {color: #666; font-size: .85em; font-weight: bold;}
+.fl-widget .fl-widget-options .pipe_divider {font-size: .85em;}
+
+.fl-widget .fl-widget-no-options { background: url('../../_images/content_br.png') top right no-repeat; padding: 0 5px 0 0; margin: 0; }
+.fl-widget .fl-widget-no-options .widget-no-options-inner { background: url('../../_images/content_bl.png') 0 0 no-repeat; margin: 0; height: 6px; }
+
+.fl-widget .fl-widget-content {background-color: #fff; padding: 10px 0 15px 0; margin: 0; border-left: 3px solid #D4DADE; border-right: 3px solid #D4DADE; }
+.fl-widget .fl-widget-content ul {margin: 0; padding: 0;}
+
+.widget1 {background-color:#FFFFFF;}
+.widget_spacer {height:1px;}
+
+#widget_settings_menu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 1px solid #D4DADE;
+	background: #fff;
+	font-size: 90%;
+	margin-top: 20px;
+}
+#widget_settings_menu ul {
+	padding: 0;
+	margin: 0;
+}
+#widget_settings_menu ul li {
+	padding: 3px 5px;
+	margin: 0;
+	list-style-type: none;
+}
+
+/* D&D Classes */
+.orderable-hover {cursor:move;}
+.orderable-dragging {opacity:0.2; width:auto;}
+.orderable-selected {}
+.orderable-avatar {background-color:#666666; border:1px solid #666666; height:25px; width:50px; z-index:65535;}
+div .orderable-drop-marker {background-color:#FA7019; height:10px !important;}
+.orderable-avatar-clone {height:200px; opacity:0.6; width:400px;}
+.drop-warning {background-color:#FFD7D7; border:2px solid red; display:none; left:10px; margin:5px; padding:10px; position:absolute; top:50px; z-index:65535;}
+.orderable-drop-marker-box {background-color:#FFFFFF; border:2px dashed #AAAAAA; height:200px !important; margin-bottom:1em; width:100%;}
+.orderable-mouse-drag {display:none;}
+#change_layout_dialog {width: 840px !important; margin-left: -420px !important;}
+
+/* Add Sakai Goodies */
+#add_goodies_dialog {width:520px; height: 374px; margin-left: -260px;}
+.add-button {background:transparent url(../../_images/button_bg.png) repeat-x scroll left bottom; border:1px solid #CCCCCC; color:#333333; display:block; float:left; padding:3px 5px; text-align:center;}
+.add_goodies .add {font-weight:bold;}
+.add_goodies .add-button {margin-left:9px; width:63px;}
+.add_goodies .add {font-weight:bold;}
+.add_goodies .dialog_body {border:1px solid #E5E5E5; height:307px; overflow:auto; position:relative; width:471px;}
+.add_goodies .dialog_body table {width: 454px;}
+.add_goodies .dialog_body td {border-style:none none solid; border-color: #E5E5E5;}
+.add_goodies .dialog_body .dialog_add_goodies_description {color:#666;font-size:12px;font-weight:100;}
+.add_goodies .dialog_body .dialog_remove_goodies_title {color:#999;font-size:14px;font-weight:700;}
+.add_goodies .dialog_body .dialog_remove_goodies_description {color:#999999;font-size:12px;font-weight:100;}
+.add_goodies .dialog_body .dialog_add_goodies_title {color:#333;font-size:13px;font-weight:700;}
+.add_goodies .dialog_body .remove {background:#F8F8F8 none repeat scroll 0 0;}
+.add_goodies .remove_add_column {width:80px;}
 
 /* Hide elements that are still in development */
 .hidedev {display:none !important;}

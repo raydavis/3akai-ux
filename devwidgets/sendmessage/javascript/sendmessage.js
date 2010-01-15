@@ -185,7 +185,7 @@ if (!sakai.sendmessage){
 	                   }
 	                
 	            },
-	            error: function(status){
+	            error: function(xhr, textStatus, thrownError) {
 					showGeneralMessage(messageDone, $(messageErrorFriends).text(), true,0);
 	            }
 	        });
@@ -392,7 +392,8 @@ if (!sakai.sendmessage){
 						"sakai:from": sdata.me.user.userid,
 						"sakai:subject": subject,
 						"sakai:body":body,
-						"sakai:category":"message"
+						"sakai:category":"message",
+						"_charset_":"utf-8"
 					};
 						
 					$.ajax({
@@ -404,7 +405,7 @@ if (!sakai.sendmessage){
 								showMessageSent(true);
 							}
 						},
-						error: function(status) {
+						error: function(xhr, textStatus, thrownError) {
 							sent++;
 							if (sent === tosend){
 								showMessageSent(false);

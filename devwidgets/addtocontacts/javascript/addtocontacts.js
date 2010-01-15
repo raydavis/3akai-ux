@@ -137,7 +137,8 @@ sakai.addtocontacts = function(tuid, placement, showSettings) {
 			"sakai:from": sdata.me.user.userid,
 			"sakai:subject": title,
 			"sakai:body":message,
-			"sakai:category":"invitation"
+			"sakai:category":"invitation",
+			"_charset_":"utf-8"
 		};
 			
 		$.ajax({
@@ -153,7 +154,8 @@ sakai.addtocontacts = function(tuid, placement, showSettings) {
 				//	$(addToContactsResponse).text($(addToContactsErrorMessage).text());
 				//}
 			},
-			error: function(status) {
+			error: function(xhr, textStatus, thrownError) {
+				
 			},
 			data: toSend
 		});
@@ -197,7 +199,8 @@ sakai.addtocontacts = function(tuid, placement, showSettings) {
 			}
 			var toSend = {
 				"fromRelationships" : fromRelationships,
-				"toRelationships" : toRelationships
+				"toRelationships" : toRelationships,
+				"_charset_":"utf-8"
 			}
 			var personalnote = formValues[addToContactsFormPersonalNote.replace(/#/gi, '')];
 			
@@ -214,7 +217,7 @@ sakai.addtocontacts = function(tuid, placement, showSettings) {
 				success: function(data) {
 					sendMessage(userid, message, title);
 				},
-				error: function(status) {
+				error: function(xhr, textStatus, thrownError) {
 					$(addToContactsResponse).text($(addToContactsErrorRequest).text());
 				},
 				data: toSend

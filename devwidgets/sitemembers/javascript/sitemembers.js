@@ -458,7 +458,7 @@ sakai.sitemembers = function(tuid, placement, showSettings){
         $.ajax({
             url: url,
             success: function(data){
-                var json = $.evalJSON(data);
+                var json = $.evalJSON(data).results;
                 
                 // If we get an emty list, then we assume we have received all the members.
                 if (json.length === 0) {
@@ -484,8 +484,8 @@ sakai.sitemembers = function(tuid, placement, showSettings){
                 }
                 loader(false);
             },
-            error: function(status){
-                if (status === 500) {
+            error: function(xhr, textStatus, thrownError) {
+                if (xhr.status === 500) {
                     gotAllMembers = true;
                     displayMore(false);
                     loader(false);
@@ -508,7 +508,7 @@ sakai.sitemembers = function(tuid, placement, showSettings){
                     getSiteMembers();
                 }
             },
-            error: function(status){
+            error: function(xhr, textStatus, thrownError) {
                 alert("An error occured");
             }
         });
@@ -569,7 +569,7 @@ sakai.sitemembers = function(tuid, placement, showSettings){
                     doPageView();
                 }
             },
-            error: function(status){
+            error: function(xhr, textStatus, thrownError) {
                 widgetSettings.data = [];
                 widgetSettings.display = "compact";
                 widgetSettings.sort = "lastname";
@@ -629,7 +629,8 @@ sakai.sitemembers = function(tuid, placement, showSettings){
         var toSend = {
             "sort": settings.sort,
             "display": settings.display,
-            "data": $.toJSON(settings.data)
+            "data": $.toJSON(settings.data),
+            "_charset_":"utf-8"
         };
         $.ajax({
             url: saveUrl,
@@ -637,7 +638,7 @@ sakai.sitemembers = function(tuid, placement, showSettings){
             success: function(data){
                 closeSettings();
             },
-            error: function(status){
+            error: function(xhr, textStatus, thrownError) {
                 alert("Failed to save settings");
             },
             data: toSend

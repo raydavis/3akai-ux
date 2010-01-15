@@ -69,11 +69,16 @@ sakai.dashboard = function(){
 			try {
 				myportaljson = $.evalJSON(response);
 				var cleanContinue = true;
+
 				for (var c in myportaljson.columns){
-					for (var pi in myportaljson.columns[c]){
-						if (pi != "contains") {
-							if (!myportaljson.columns[c][pi].uid) {
-								cleanContinue = false;
+					if (myportaljson.columns.hasOwnProperty(c)) {
+						for (var pi in myportaljson.columns[c]) {
+							if (myportaljson.columns[c].hasOwnProperty(pi)) {
+								if (pi != "contains") {
+									if (!myportaljson.columns[c][pi].uid) {
+										cleanContinue = false;
+									}
+								}
 							}
 						}
 					}
@@ -103,14 +108,9 @@ sakai.dashboard = function(){
 	sdata.container.registerCancelFunction(sakai.dashboard.finishEditSettings);
 
 	var showInit = function(){
-		
-		var toAdd = [];
-		var added = [];
-		var grouptype = "General";
 	
 		var columns = [];
 		var layout = "dev";
-		var olayout = null;
 		
 		columns[0] = [];
 		columns[1] = [];
@@ -137,7 +137,7 @@ sakai.dashboard = function(){
 		
 		myportaljson = jsonobj;
 	
-		sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets","devstate",$.toJSON(jsonobj), saveGroup);
+		sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets",stateFile,$.toJSON(jsonobj), saveGroup);
 		
 	};
 	
@@ -236,7 +236,7 @@ sakai.dashboard = function(){
 	
 			myportaljson = $.evalJSON(jsonstring);
 	
-			sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets","devstate",jsonstring, beforeFinishAddWidgets);
+			sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets",stateFile,jsonstring, beforeFinishAddWidgets);
 			
 		}
 	});
@@ -247,22 +247,6 @@ sakai.dashboard = function(){
 	};
 
 	var doInit = function (){
-
-		// Initial Sling HACK - Populating admin users' profile
-		if (sdata.me.user.userid === "admin" && !sdata.me.profile.firstName){
-			sdata.me.profile.firstName = "Admin";
-			sdata.me.profile.lastName = "User";
-			sdata.me.profile.email = "admin@user.com";
-			$.ajax({
-				type: "POST",
-				url: "/_user/public/admin/authprofile",
-				data : {
-					"firstName" : "Admin",
-					"lastName" : "User",
-					"email" : "admin@user.com"
-				}
-			});
-		}
 
 		person = sdata.me;
 		inituser = person.user.userid;
@@ -403,7 +387,7 @@ sakai.dashboard = function(){
 			myportaljson = $.evalJSON(jsonstring);
 			layout = myportaljson;
 			
-			sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets", "devstate", jsonstring, null);
+			sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets", stateFile, jsonstring, null);
 			
 		}
 		
@@ -650,7 +634,7 @@ sakai.dashboard = function(){
 				}
 			}
 
-			sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets","devstate",serString, checksucceed);
+			sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets",stateFile,serString, checksucceed);
 	
 		}
 		
@@ -826,7 +810,7 @@ sakai.dashboard = function(){
 
 		myportaljson = $.evalJSON(jsonstring);
 
-		sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets","devstate",jsonstring, finishAddWidgets);
+		sdata.widgets.WidgetPreference.save(Config.URL.SDATA_FETCH_PRIVATE_URL.replace(/__USERID__/, sdata.me.user.userid) + "/widgets",stateFile,jsonstring, finishAddWidgets);
 
 	};
 

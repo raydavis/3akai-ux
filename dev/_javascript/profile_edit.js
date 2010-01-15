@@ -282,12 +282,13 @@ sakai.profile = function(){
 					
 					var tosend = {};
 					tosend[savefield] = data[savestring];
+					tosend["_charset_"] = "utf-8";
 						
 					$.ajax({
 						url : fileUrl,
 						type : "POST",
 						data : tosend,
-						error : function(data){
+						error: function(xhr, textStatus, thrownError) {
 							alert("An error has occured while trying to post to " + fileUrl);
 						}
 					});
@@ -398,12 +399,13 @@ sakai.profile = function(){
 				
 				var tosend = {};
 				tosend[savefield] = data[savestring];
+				tosend["_charset_"] = "utf-8";
 				
 				$.ajax({
 					url: fileUrl,
 					type: "POST",
 					data: tosend,
-					error: function(data){
+					error: function(xhr, textStatus, thrownError) {
 						alert("An error has occured while posting to " + fileUrl);
 					}
 				});
@@ -454,12 +456,12 @@ sakai.profile = function(){
 
 				var tosend = {};
 				tosend[savefield] = data[savestring];
-				
+				tosend["_charset_"] = "utf-8";
 				$.ajax({
 					url: fileUrl,
 					type: "POST",
 					data: tosend,
-					error: function(data){
+					error: function(xhr, textStatus, thrownError) {
 						alert("An error has occured while posting to " + fileUrl);
 					}
 				});
@@ -748,12 +750,13 @@ sakai.profile = function(){
 		
 		var tosend = {};
 		tosend[key] = val;
+		tosend["_charset_"] = "utf-8";
 		
 		$.ajax({
 			url : fileUrl,
 			type : "POST",
 			data : tosend,
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured while posting to " + fileUrl);
 			}
 		});

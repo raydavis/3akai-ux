@@ -390,7 +390,7 @@ sakai.site.site_admin = function(){
 				setTimeout('sakai.site.setIframeHeight("elm1_ifr")',0);
 				
 			},
-			error: function(data){	
+			error: function(xhr, textStatus, thrownError) {	
 				sakai.site.timeoutid = setInterval(sakai.site.doAutosave, sakai.site.autosaveinterval);
 			}
 		});	
@@ -601,7 +601,8 @@ sakai.site.site_admin = function(){
 								"title": newpagetitle,
 								"type": "webpage",
 								"position": "" + (determineHighestPosition() + 100000),
-								"acl": "parent"
+								"acl": "parent",
+								"_charset_":"utf-8"
 							},
 							success: function(){
 								
@@ -617,7 +618,7 @@ sakai.site.site_admin = function(){
 							}
 						});
 									
-					}, null, "x-sakai-page");					
+					}, null, "text/plain", "sakai/pagecontent");					
 					
 				}
 				else {
@@ -661,7 +662,8 @@ sakai.site.site_admin = function(){
 								"id": sakai.site.selectedpage,
 								"title": newpagetitle,
 								"type": "webpage",
-								"position": position
+								"position": position,
+								"_charset_":"utf-8"
 							}
 						});
 						
@@ -671,7 +673,7 @@ sakai.site.site_admin = function(){
 							type: 'POST'
 						});
 					
-					}, null, "x-sakai-page");
+					}, null, "text/plain", "sakai/pagecontent");
 					
 				}
 			}
@@ -801,7 +803,8 @@ sakai.site.site_admin = function(){
 									"id":pageid,
 									"title": newpagetitle,
 									"type": "webpage",
-									"position": position
+									"position": position,
+									"_charset_":"utf-8"
 								},
 								success: function(){
 									// Check in the page
@@ -819,10 +822,10 @@ sakai.site.site_admin = function(){
 								}
 							});
 					
-						}, null, "x-sakai-page");	
+						}, null, "text/plain", "sakai/pagecontent");	
 				
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				
 					// Render the new page under the new URL
 					
@@ -861,7 +864,8 @@ sakai.site.site_admin = function(){
 									"id":pageid,
 									"title": newpagetitle,
 									"type": "webpage",
-									"position": position
+									"position": position,
+									"_charset_":"utf-8"
 								}
 							});
 							
@@ -874,7 +878,7 @@ sakai.site.site_admin = function(){
 							// Refresh site info
 							sakai.site.refreshSiteInfo();
 							
-						}, null, "x-sakai-page");	
+						}, null, "text/plain", "sakai/pagecontent");	
 				
 			}
 		});
@@ -988,7 +992,7 @@ sakai.site.site_admin = function(){
 		}
 		
 		// Save the data
-		sdata.widgets.WidgetPreference.save(sakai.site.urls.CURRENT_SITE_PAGES(), "_content", tosave, function(){}, null, "x-sakai-page");
+		sdata.widgets.WidgetPreference.save(sakai.site.urls.CURRENT_SITE_PAGES(), "_content", tosave, function(){}, null, "text/plain", "sakai/pagecontent");
 
 		// Update autosave indicator
 		var now = new Date();
@@ -1896,7 +1900,8 @@ sakai.site.site_admin = function(){
 				"title": "Untitled",
 				"type": "webpage",
 				"position": "" + (determineHighestPosition() + 100000),
-				"acl": "parent"
+				"acl": "parent",
+				"_charset_":"utf-8"
 			},
 			complete: function(){
 				// Init tinyMCE if needed
@@ -1974,7 +1979,7 @@ sakai.site.site_admin = function(){
 				// Refresh site_info object
 				sakai.site.refreshSiteInfo(pageid);
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("Could not create this dashboard page.");
 			}
 		});
@@ -2130,7 +2135,7 @@ sakai.site.site_admin = function(){
 				}
 					
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("Revision History: An error has occured");
 				sakai.site.versionHistoryNeedsReset = true;
 			}
@@ -2174,10 +2179,10 @@ sakai.site.site_admin = function(){
 							url: newfolderpath + "/content.save.html",
 							type: 'POST'
 					});
-				}, null, "x-sakai-page");
+				}, null, "text/plain", "sakai/pagecontent");
 				sakai.site.resetVersionHistory();
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("Revision History: An error has occured");
 			}
 		});
@@ -2205,7 +2210,7 @@ sakai.site.site_admin = function(){
 					sakai.site._displayDashboard (json.data, true);
 				}
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured while trying to cahnge version preview");
 			}
 		});
@@ -2448,7 +2453,7 @@ sakai.site.site_admin = function(){
 							});
 							
 						},
-						error: function(data){
+						error: function(xhr, textStatus, thrownError) {
 							
 							// Rewrite configuration file	
 							var parentEl = $(".root");
@@ -2586,7 +2591,7 @@ sakai.site.site_admin = function(){
 					var templates = $.evalJSON(data);
 					updateTemplates(obj, newid, templates);
 				},
-				error : function(data){
+				error: function(xhr, textStatus, thrownError) {
 					var templates = {};
 					updateTemplates(obj, newid, templates);
 				}
@@ -2636,7 +2641,7 @@ sakai.site.site_admin = function(){
 				var templates = $.evalJSON(data);
 				renderTemplates(templates);
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				var templates = {};
 				renderTemplates(templates);
 			}
@@ -2741,7 +2746,7 @@ sakai.site.site_admin = function(){
 				document.location = "/sites/" + sakai.site.currentsite.id;
 				
 			},
-			error: function(data){	
+			error: function(xhr, textStatus, thrownError) {	
 				
 				delete sakai.site.site_info._pages[sakai.site.selectedpage];
 				document.location = "/sites/" + sakai.site.currentsite.id;

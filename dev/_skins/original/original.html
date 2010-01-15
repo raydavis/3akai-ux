@@ -42,6 +42,7 @@
 	<script type="text/javascript" language="JavaScript" src="/dev/_lib/sakai_util/sdata.js"></script>
 	<script type="text/javascript" language="JavaScript" src="/dev/_lib/sakai_util/querystring.js"></script>
 	<script type="text/javascript" language="JavaScript" src="/dev/_lib/sakai_util/i18n.js"></script>
+	<script type="text/javascript" language="JavaScript" src="/dev/_lib/sakai_util/site_authz.js"></script>
 	
 	<script type="text/javascript" language="JavaScript" src="/apps/gnr3/ppkr/lib/jquery-autocomplete/jquery.autocomplete.js"></script>
 	
@@ -141,7 +142,7 @@
 			    <!-- TOP BORDER -->
 			    <div class="content_top"><div class="content_top_inner"></div></div>
 			    
-			    <div class="sakai_site_contents_main">
+			    <div class="sakai_site_contents_main fl-fix">
 				
 				<!-- REVISION HISTORY -->
 				<div class="fl-container revision_history fl-fix" id="revision_history_container"  style="display:none">
@@ -286,17 +287,26 @@
 				    {/for}
 				--></div>
 		
-				<!-- Add goodies -->
+				<!-- ADD GOODIES DIALOG -->
 				<div id="add_goodies_dialog" class="dialog add_goodies">
+
+					<!-- DIALOG HEADER -->
 					<div class="dialog_header">
-					    <div class="dialog_header_inner">
-						<h1>Add Goodies</h1>
-						<a href="javascript:;" class="jqmClose dialog_close_image" title="Close Dialog">Close Dialog</a>
-					    </div>
+						<div class="dialog_header_inner">
+							<h1>Add Goodies</h1>
+							<a href="javascript:;" class="jqmClose dialog_close_image" title="Close Dialog">Close Dialog</a>
+						</div>
 					</div>
-					<div id="add_goodies_body" class="dialogue_body">
+					<!-- DIALOG CONTENT -->
+					<div class="dialog_content">
+						<div id="add_goodies_body" class="dialog_body">
+						</div>
 					</div>
 		
+					<!-- DIALOG FOOTER -->
+					<div class="dialog_footer">
+						<div class="dialog_footer_inner"><!-- --></div>
+					</div>
 					<div id="add_goodies_body_template"><!--
 						<table>
 						{for i in items}
@@ -440,7 +450,7 @@
 				</div>
 				
 				
-				<div class="content_container" id="page_preview_content" style="display:none;">
+				<div class="content_container fl-fix" id="page_preview_content" style="display:none;">
 					
 				</div>
 				

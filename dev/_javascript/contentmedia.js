@@ -310,7 +310,10 @@ sakai.contentmedia = function(){
 				postData.site = movedFiles.dropped[0];
 				postData.link = movedFiles.dropped[0] + "/_files";
 			}
-
+			
+			// Make sure POST data gets in as UTF-8 as per Sling requirement
+			postData["_charset_"] = "utf-8";
+			
 			// Send the ajax post
 			$.ajax({
 				type: "POST",
@@ -328,7 +331,7 @@ sakai.contentmedia = function(){
 						
 					}
 				},
-				error: function(status){
+				error: function(xhr, textStatus, thrownError) {
 					alert("An error has occured");
 				}
 			});
@@ -517,7 +520,7 @@ sakai.contentmedia = function(){
 			success: function(data){
 				doFileRender($.evalJSON(data));
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured");
 			}
 		});
@@ -1092,7 +1095,8 @@ sakai.contentmedia = function(){
 		// supply an array with the URLs of the files that need to be deleted
 		$.ajax({
 			data: {
-				"resources" : doSelectedFilesURLToArray()
+				"resources" : doSelectedFilesURLToArray(),
+				"_charset_" : "utf-8"
 			},
 			type: "POST",
 			url: "/system/batch/delete",
@@ -1105,7 +1109,7 @@ sakai.contentmedia = function(){
 				// If the post was successful, we redo the search
 				doFileSearch(options);
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has while deleting the files occured");
 			}
 		});
@@ -1334,7 +1338,7 @@ sakai.contentmedia = function(){
 				parseTreeData($.evalJSON(data));
 				//doFileRender($.evalJSON(data));
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured");
 			}
 		});
@@ -1398,7 +1402,7 @@ sakai.contentmedia = function(){
 					// Fetch the initial list of files
 					doFileSearch(options);
 				},
-				error: function(status){
+				error: function(xhr, textStatus, thrownError) {
 					//alert("An error has occured");
 				}
 			});

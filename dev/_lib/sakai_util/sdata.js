@@ -122,11 +122,11 @@ if(!Array.indexOf){
 		
 		// Call original error handler, but not in the case of 409 as we want that to be transparent for users
 		if ((s.error) && (requestStatus !== 409)) {
-		  s.error(requestStatus, status, e);
+		  s.error(xhr, status, e);
 		}
 
 		if (s.global) {
-		  jQuery.event.trigger("ajaxError", [xhr, s, e]);
+		  jQuery.event.trigger("ajaxError", [xhr, status, e]);
 		}
 	      }
 		
@@ -351,7 +351,7 @@ sdata.widgets.WidgetLoader = {
 			var divarray = $(widgetSelector, el);
 			settings = showSettings || false;
 			
-			for (var i = 0; i < divarray.length; i++){
+			for (var i = 0, j = divarray.length; i < j; i++){
 				try {
 					var id = divarray[i].id;
 					var split = id.split("_");
@@ -429,7 +429,7 @@ sdata.widgets.WidgetLoader = {
 	
 			for (i in widgets){
 				if (widgets[i]) {
-					for (var ii = 0; ii < widgets[i].length; ii++) {
+					for (var ii = 0, jj = widgets[i].length; ii<jj; ii++) {
 						var originalEl = document.getElementById(widgets[i][ii].id);
 						var newel = document.createElement("div");
 						newel.id = widgets[i][ii].uid;
@@ -451,7 +451,7 @@ sdata.widgets.WidgetLoader = {
 		var loadWidgetFiles = function(widgets,widgetname){
 			var url = Widgets.widgets[widgetname].url;
 			if (Widgets.widgets[widgetname].gwt == 1) {
-				for (var i = 0; i < widgets[widgetname].length; i++) {
+				for (var i = 0, j = widgets[widgetname].length; i < j; i++) {
 					var iframescr = url + "?placement=" + widgets[widgetname][i].placement + "&tuid=" + widgets[widgetname][i].uid + "&showSettings=" + settings + "&sid=" + Math.random();
 					var oiFrame = document.createElement('iframe');
 					oiFrame.setAttribute("width", "100%");
@@ -469,8 +469,11 @@ sdata.widgets.WidgetLoader = {
 					url: url,
 					success: function(response){
 						var thisobj2 = {};
-						var newstring = $.i18n(response, sdata.i18n.localBundle, sdata.i18n.defaultBundle);
-						sethtmlover(null, newstring, widgets, widgetname);
+						
+						// Do i18n on widget content
+						var translated_content = $.i18n_widget(widgetname, response);
+						
+						sethtmlover(null, translated_content, widgets, widgetname);
 					}
 				});
 			}
@@ -497,14 +500,14 @@ sdata.widgets.WidgetLoader = {
 			
 			var initfunction = eval(widgetNameSpace + "." + widgetname);
 			
-			for (var i = 0; i < CSSTags.URL.length; i++) {
+			for (var i = 0, j = CSSTags.URL.length; i<j; i++) {
 				$.Load.requireCSS(CSSTags.URL[i]);
 			}
 			
 			var JSTags = locateTagAndRemove(content, "script", "src");
 			content = JSTags.content;
 			
-			for (var widget = 0; widget < widgets[widgetname].length; widget++){
+			for (var widget = 0, k = widgets[widgetname].length; widget < k; widget++){
 				var container = $("<div>");
 				container.html(content);
 				$("#" + widgets[widgetname][widget].uid).append(container);
@@ -513,7 +516,7 @@ sdata.widgets.WidgetLoader = {
 				widgets[widgetname][widget].done = 0;		
 			}
 		
-			for (var JSURL = 0; JSURL < JSTags.URL.length; JSURL++){
+			for (var JSURL = 0, l = JSTags.URL.length; JSURL < l; JSURL++){
 				$.Load.requireJS(JSTags.URL[JSURL]);
 			}	
 				
@@ -528,7 +531,7 @@ sdata.widgets.WidgetLoader = {
 	},
 	
 	informOnLoad : function(widgetname){
-		for (var i = 0; i < sdata.widgets.WidgetLoader.loaded.length; i++){
+		for (var i = 0, j = sdata.widgets.WidgetLoader.loaded.length; i<j; i++){
 			sdata.widgets.WidgetLoader.loaded[i].informOnLoad(widgetname);
 		}
 	}
@@ -593,8 +596,8 @@ sdata.widgets.WidgetPreference =  {
 			success : function(data) {
 				callback(data,true);
 			},
-			error : function(status) {
-				callback(status,false);
+			error: function(xhr, textStatus, thrownError) {
+				callback(xhr.status,false);
 			},
 			sendToLoginOnFail: args
 		});
@@ -607,17 +610,18 @@ sdata.widgets.WidgetPreference =  {
 	 * @param prefcontent the content to be saved
 	 * @param {function} callback, the call back to call when the save is complete
 	 */
-	save : function(url, prefname, prefcontent, callback, requireslogin,contentType){
+	save : function(url, prefname, prefcontent, callback, requireslogin, contentType, resourceType){
 		
 		var cb = callback || function() {}; 
 		var args = (requireslogin === false ? false : true);
 		var ct = contentType || "text/plain";
+		var rt = resourceType || "";
 		
 		var boundaryString = "bound"+Math.floor(Math.random() * 9999999999999);
 		var boundary = '--' + boundaryString;
 		
 		var outputData = boundary + '\r\n' +
-					 'Content-Disposition: form-data; name="' + prefname + '"; filename="' + prefname + '"\r\n'+ 
+					 'Content-Disposition: form-data; name="' + prefname + '"; filename="' + prefname + '"; \r\n'+ 
 					 'Content-Type: '+ ct + '\r\n' +
 					 '\r\n'+
 					 prefcontent +
@@ -629,10 +633,32 @@ sdata.widgets.WidgetPreference =  {
 			type : "POST",
 			contentType : "multipart/form-data; boundary=" + boundaryString,
 			success : function(data) {
-				cb(data,true);
+				// Set Sling resourceType on node if set by caller (so that search servlet finds it) - TO DO this should eventually be in a batch POST
+				// jcr:mixinTypes required to get around 500 thrown by Sling
+				
+				if (rt !== "") {
+				  $.ajax({
+				    url: url+"/"+prefname,
+				    type: "POST",
+				    data: {
+				      "jcr:mixinTypes": "sakai:propertiesmix",
+				      "sling:resourceType": rt,
+				      "_charset_":"utf-8"
+				    },
+				    success: function() {
+				      cb(data,true);
+				    },
+				    error: function() {
+				      fluid.log("Widgetpreference.save failed to set resourceType in sdata.js!");
+				    }
+				  });  
+				} else {
+				  cb(data,true);
+				}
+				
 			},
-			error : function(status) {
-				cb(status,false);
+			error: function(xhr, textStatus, thrownError) {
+				cb(xhr.status,false);
 			},
 			data : outputData,
 			sendToLoginOnFail: args
@@ -777,6 +803,121 @@ sdata.widgets.WidgetPreference =  {
 	};
 	
 })(jQuery);
+
+
+/////////////////////////////////////
+// jQuery i18n plugin for widgets  // 
+/////////////////////////////////////
+
+(function($){
+	
+	/*
+	* Loads up language bundle for the widget, and exchanges messages found in content.
+	* If no language bundle found, it attempts to load the default language bundle for the widget, and use that for i18n
+	* @param widget_id {String} The ID of the widget
+	* @param content {String} The content html of the widget which contains the messages
+	* @returns {String} The translated content html
+	*/
+	
+	$.i18n_widget = function(widgetname, widget_html_content) {
+	  
+	  var translated_content = "";
+	  var current_locale_string = false;
+	  if (typeof sdata.me.user.locale === "object") {
+	    current_locale_string = sdata.me.user.locale.language + "_" + sdata.me.user.locale.country;
+	  }
+	  
+	  // If there is no i18n defined in Widgets, run standard i18n on content
+	  if (typeof Widgets.widgets[widgetname].i18n !== "object") {
+	    translated_content = $.i18n(widget_html_content, sdata.i18n.localBundle, sdata.i18n.defaultBundle)
+	    return translated_content;
+	  }
+
+	  // Load default language bundle for the widget if exists
+	  if (Widgets.widgets[widgetname]["i18n"]["default"]) {
+	    
+	    $.ajax({
+	      url: Widgets.widgets[widgetname]["i18n"]["default"],
+	      async: false,
+	      success: function(messages_raw) {
+		
+		sdata.i18n.widgets[widgetname] = sdata.i18n.widgets[widgetname] || {};
+		sdata.i18n.widgets[widgetname]["default"] = $.evalJSON(messages_raw);
+		
+	      },
+	      error: function(xhr, textStatus, thrownError) {
+		alert("Could not load default language bundle for widget: " + widgetname);
+	      }
+	    });
+	    
+	  }
+	  
+	  // Load current language bundle for the widget if exists
+	  if (Widgets.widgets[widgetname]["i18n"][current_locale_string]) {
+	    
+	    $.ajax({
+	      url: Widgets.widgets[widgetname]["i18n"][current_locale_string],
+	      async: false,
+	      success: function(messages_raw) {
+		
+		sdata.i18n.widgets[widgetname] = sdata.i18n.widgets[widgetname] || {};
+		sdata.i18n.widgets[widgetname][current_locale_string] = $.evalJSON(messages_raw);
+		
+	      },
+	      error: function(xhr, textStatus, thrownError) {
+		alert("Could not load default language bundle " + current_locale_string + "for widget: " + widgetname);
+	      }
+	    });
+	  }
+	
+	  // Translate widget name and description
+	  if ((typeof sdata.i18n.widgets[widgetname][current_locale_string] === "object") && (typeof sdata.i18n.widgets[widgetname][current_locale_string]["name"] === "string")) {
+	    Widgets.widgets[widgetname]["name"] = sdata.i18n.widgets[widgetname][current_locale_string]["name"];
+	  }
+	  if ((typeof sdata.i18n.widgets[widgetname][current_locale_string] === "String") && (typeof sdata.i18n.widgets[widgetname][current_locale_string]["description"] === "string")) {
+	    Widgets.widgets[widgetname]["name"] = sdata.i18n.widgets[widgetname][current_locale_string]["description"];
+	  }
+	  
+	  
+	  // Change messages
+	  var expression = new RegExp("__MSG__(.*?)__", "gm");
+	  var lastend = 0;
+	  while(expression.test(widget_html_content)) {
+	    var replace = RegExp.lastMatch;
+	    var lastParen = RegExp.lastParen;
+	    var toreplace = $.i18n.widgets_getValueForKey(widgetname, current_locale_string, lastParen);
+	    translated_content += widget_html_content.substring(lastend,expression.lastIndex-replace.length) + toreplace;
+	    lastend = expression.lastIndex;
+	  }
+	  translated_content += widget_html_content.substring(lastend);	  
+	  
+	  return translated_content;
+	};
+	  
+	// Get a message key value in priority order: local widget language file -> widget default language file -> system local bundle -> system default bundle
+	$.i18n.widgets_getValueForKey = function(widgetname, locale, key){
+	  	  
+	  if ((typeof sdata.i18n.widgets[widgetname][locale] === "object") && (typeof sdata.i18n.widgets[widgetname][locale][key] === "string")){
+	      
+	      return sdata.i18n.widgets[widgetname][locale][key];
+	    
+	    } else if ((typeof sdata.i18n.widgets[widgetname]["default"][key] === "string") && (typeof sdata.i18n.widgets[widgetname]["default"] === "object")) {
+	      
+	      return sdata.i18n.widgets[widgetname]["default"][key];
+	    
+	    } else if (sdata.i18n.localBundle[key]) {
+	      
+	      return sdata.i18n.localBundle[key]
+	    
+	    } else if (sdata.i18n.defaultBundle[key]) {
+	      
+	      return sdata.i18n.defaultBundle[key];
+	    
+	    }
+	};
+	
+})(jQuery);
+
 
 
 /////////////////////////////////
@@ -941,8 +1082,8 @@ sdata.files = {
                 });
 				callback(json, true);
             },
-            error: function(status){
-				callback(status, false);
+            error: function(xhr, textStatus, thrownError) {
+	      callback(xhr.status, false);
             }
         });
 	},
@@ -971,8 +1112,8 @@ sdata.files = {
                 var json = $.evalJSON(data);
 				callback(json, true);
             },
-            error: function(status){
-				callback(status, false);
+            error: function(xhr, textStatus, thrownError) {
+		callback(xhr.status, false);
             }
         });
 	},

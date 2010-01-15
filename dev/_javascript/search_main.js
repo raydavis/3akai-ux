@@ -401,7 +401,8 @@ sakai._search = function(config, callback) {
 					// do a request to the messaging service as well.
 					var toSend = {
 						"to": userid,
-						"message": $.toJSON(openSocialMessage)
+						"message": $.toJSON(openSocialMessage),
+						"_charset_":"utf-8"
 					};
 					$.ajax({
 						url: Config.URL.MESSAGES_SEND_SERVICE,
@@ -420,14 +421,14 @@ sakai._search = function(config, callback) {
 								$(searchConfig.addFriend.response).text($(searchConfig.addFriend.errors.message).text());
 							}
 						},
-						error: function(status) {
+						error: function(xhr, textStatus, thrownError) {
 							$(searchConfig.addFriend.response).text($(searchConfig.addFriend.errors.message).text());
 						},
 						data: toSend
 					});
 					
 				},
-				error: function(status) {
+				error: function(xhr, textStatus, thrownError) {
 					$(searchConfig.addFriend.response).text($(searchConfig.addFriend.errors.request).text());
 				},
 				data: data

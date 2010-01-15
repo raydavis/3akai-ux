@@ -54,7 +54,7 @@ sakai.search = function(){
 				foundContacts = $.evalJSON(data);
 				renderContacts();
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				$("#contacts_search_result").html("<b>An error has occurred.</b> Please try again later");
 			}
 		});
@@ -148,7 +148,7 @@ sakai.search = function(){
 				foundInvitations = $.evalJSON(data);
 				renderInvitations();
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				$("#invited_search_result").html("<b>An error has occurred.</b> Please try again later");
 			}
 		});
@@ -209,13 +209,14 @@ sakai.search = function(){
 			$.ajax({
 				url: "/_user/contacts/" + user + ".accept.html",
 				type: "POST",
+				data : {"_charset_":"utf-8"},
 				success: function(data){
 					setTimeout(loadContacts,500,[1]);
 					
 					// remove from json file
 					
 					var index = -1;
-					for (var i = 0; i < foundInvitations.results.length; i++){
+					for (var i = 0, j = foundInvitations.results.length; i<j; i++){
 						if (foundInvitations.results[i].target == user){
 							index = i;
 						}
@@ -227,7 +228,7 @@ sakai.search = function(){
 					renderInvitations();
 					
 				},
-				error : function(data){
+				error: function(xhr, textStatus, thrownError) {
 					alert("An error has occured");
 				}
 			});
@@ -254,7 +255,7 @@ sakai.search = function(){
 				foundPending = $.evalJSON(data);
 				renderPending();
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				$("#pending_search_result").html("<b>An error has occurred.</b> Please try again later");
 			}
 		});

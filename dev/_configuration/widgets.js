@@ -60,7 +60,7 @@ var Widgets = {
 		},
 		googlemaps :
 		{
-			description:"Google maps \r\n",
+			description:"Google maps\r\n",
 			iframe:0,
 			url:"/devwidgets/googlemaps/googlemaps.html",
 			name:"Googlemaps",
@@ -127,17 +127,6 @@ var Widgets = {
 			siteportal:0,
 			img:"/dev/img/sites.png"
 		},
-		s23tools :
-		{
-			description:"Listing of the tools from Sakai 2\r\n",
-			iframe:0,
-			url:"/devwidgets/s23/s23tools/s23tools.html",
-			name:"Sakai 2 - Tools",
-			id:"s23tools",
-			personalportal:1,
-			siteportal:0,
-			img:"/dev/img/sites.png"
-		},
 		sendmessage :
 		{
 			description:"Send a message\r\n",
@@ -161,7 +150,11 @@ var Widgets = {
 			ca:1,
 			showinmedia:0,
 			showinsakaigoodies:1,
-			img:"/devwidgets/discussion/images/discussion.png"
+			img:"/devwidgets/discussion/images/discussion.png",
+			i18n: {
+				"default": "/devwidgets/discussion/bundles/default.json",
+				"en_US": "/devwidgets/discussion/bundles/en_US.json"
+			}
 		},
 		filepicker :
 		{

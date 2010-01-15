@@ -121,7 +121,7 @@ sakai.twitter = function(tuid,placement,showSettings){
 			var basic = {};
 			basic.status = json.status;
 			
-			var data = {"basic":$.toJSON(basic)};
+			var data = {"basic":$.toJSON(basic),"_charset_":"utf-8"};
 			
 			$.ajax({
 				url :"/_user/public/" + sdata.me.user.userid + "/authprofile",
@@ -132,7 +132,7 @@ sakai.twitter = function(tuid,placement,showSettings){
 					var ev = {};
 					ev.value = json.status;
 				},
-				error : function(data){
+				error: function(xhr, textStatus, thrownError) {
 					setError("An error occurend when sending the status to the server.");
 				}
 			});
@@ -221,8 +221,8 @@ sakai.twitter = function(tuid,placement,showSettings){
 	            success : function(data) {
 					parseTwitterStatus(data, true);
 	            },
-	            error : function(status) {
-					parseTwitterStatus(status, false);
+	            error: function(xhr, textStatus, thrownError) {
+					parseTwitterStatus(xhr.status, false);
 	            },
 	            data : oPostData
 	        });
@@ -243,7 +243,8 @@ sakai.twitter = function(tuid,placement,showSettings){
 				var oPostData = {
 					":basic-user" : json.screen_name,
 					":basic-password" : json.password,
-					status : currentBasic.status
+					status : currentBasic.status,
+					"_charset_":"utf-8"
 				};
 				
 				$.ajax({
@@ -252,8 +253,8 @@ sakai.twitter = function(tuid,placement,showSettings){
 					success : function(data) {
 						parseTwitterResponse(data, true);
 					},
-					error : function(status) {
-						parseTwitterResponse(status, false);
+					error: function(xhr, textStatus, thrownError) {
+						parseTwitterResponse(xhr.status, false);
 					},
 					data : oPostData
 				});

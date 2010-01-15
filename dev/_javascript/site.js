@@ -17,7 +17,7 @@
  */
 
 /*global $, Config, History, Querystring, sdata, sakai, jQuery */
-
+var sakai = sakai || {};
 sakai.site = function(){		
 
 
@@ -35,7 +35,6 @@ sakai.site = function(){
 	sakai.site.siteAdminJS = "/dev/_javascript/site_admin.js";
 	
 	// Help variables - public as some of these needs to be shared with admin section
-	sakai.site.siteAdminLoaded = false;
 	sakai.site.cur = 0;
 	sakai.site.curScroll = false;
 	sakai.site.minTop = false;
@@ -216,7 +215,8 @@ sakai.site = function(){
 				// Save current site to Recent Sites
 				saveToRecentSites(response);
 			},
-			error: function(httpstatus){
+			error: function(xhr, textStatus, thrownError) {
+				var httpstatus = xhr.status;
 				if (httpstatus === 401) {
 					document.location = Config.URL.GATEWAY_URL;
 				}
@@ -238,32 +238,21 @@ sakai.site = function(){
 			$site_management_files_link.attr("href", $site_management_files_link.attr("href") + sitepath);
 		}
 
-		// Fill up ME object which contains user info
-		sakai.site.meObject = sdata.me;
+		// Determine whether the user is maintainer, if yes show and load admin elements
+		sakai.site.isCollaborator = sakai.lib.site.authz.isUserMaintainer(sakai.site.currentsite.id, sdata.me.user.subjects);
+		if (sakai.site.isCollaborator) {
+			// Show admin elements
+			$li_edit_page_divider.show();
+			$li_edit_page.show();
+			$add_a_new.show();
+			$site_management.show();
 
-		// Determine whether the user is mantainer, if yes show and load admin elements
-		var collaboratorgroup = "g-" + sakai.site.currentsite.id + "-collaborators";
-		for (var i = 0, j = sdata.me.user.subjects.length; i<j; i++) {
-			if (sdata.me.user.subjects[i] === collaboratorgroup) {
-			
-				// Show admin elements
-				$li_edit_page_divider.show();
-				$li_edit_page.show();
-				$add_a_new.show();
-				$site_management.show();
-				
-				// Load admin part from a separate file
-				$.Load.requireJS(sakai.site.siteAdminJS);
-				
-				// Remember we are a collaborator.
-				sakai.site.isCollaborator = true;
-
-				break;
-			}
+			// Load admin part from a separate file
+			$.Load.requireJS(sakai.site.siteAdminJS);
 		}
 
 		// Check user's login status
-		if (sakai.site.meObject.user.userid){
+		if (sdata.me.user.userid){
 			$("#loginLink").hide();
 		} else {
 			$(".explore_nav").hide();
@@ -319,7 +308,7 @@ sakai.site = function(){
 			if (adjusted) {
 				// We had to do some manipulation, save the content.
 				sdata.widgets.WidgetPreference.save(url.replace("/content", ""), "content", $el.html(), null);
-				for (var i = 0; i < moveWidgets.length;i++) {
+				for (var i = 0, j = moveWidgets.length; i < j; i++) {
 					// Move all the widgets.
 					var url = sakai.site.urls.CURRENT_SITE_ROOT() + "_widgets/" + moveWidgets[i].from;
 					var dest = sakai.site.urls.CURRENT_SITE_ROOT() + "_widgets/" + moveWidgets[i].to;
@@ -327,16 +316,17 @@ sakai.site = function(){
 					$.ajax({
 						url: url,
 						data: {
-							':operation' : 'move',
-							':dest' : dest
+							":operation" : "move",
+							":dest" : dest,
+							"_charset_":"utf-8"
 						},
 						cache: false,
 						type: "POST",
 						success: function(response) {
 							console.log(response);
 						},
-						error: function(status) {
-							console.log("Failed to move a widget: " + status);
+						error: function(xhr, textStatus, thrownError) {
+							alert("Failed to move a widget: " + xhr.status);
 						}
 					});
 				}
@@ -360,7 +350,8 @@ sakai.site = function(){
 				sdata.widgets.WidgetLoader.insertWidgets("page_nav_content",null,sakai.site.currentsite.id + "/_widgets");
 				History.history_change();
 			},
-			error: function(httpstatus){
+			error: function(xhr, textStatus, thrownError) {
+				var httpstatus = xhr.status;
 				History.history_change();
 				if (httpstatus === 401) {
 					document.location = Config.URL.GATEWAY_URL;
@@ -390,8 +381,6 @@ sakai.site = function(){
 	 * @return void
 	 */
 	sakai.site.onAdminLoaded = function(){
-		sakai.site.siteAdminLoaded = true;
-		
 		// Init site admin
 		sakai.site.site_admin();
 		
@@ -450,7 +439,8 @@ sakai.site = function(){
 				}
 				
 			},
-			error: function(httpstatus) {
+			error: function(xhr, textStatus, thrownError) {
+				var httpstatus = xhr.status;
 				sakai.site.site_info = {};
 				if (httpstatus === 401) {
 					document.location = Config.URL.GATEWAY_URL;
@@ -500,14 +490,18 @@ sakai.site = function(){
 				items.items = items.items.splice(0,5);
 				
 				// Write
-				sdata.widgets.WidgetPreference.save("/_user/private/" + sdata.me.user.userStoragePrefix.substring(0, sdata.me.user.userStoragePrefix.length - 1), "recentsites.json", $.toJSON(items), function(success){});
+				if (sdata.me.user.userStoragePrefix) {
+					sdata.widgets.WidgetPreference.save("/_user/private/" + sdata.me.user.userStoragePrefix.substring(0, sdata.me.user.userStoragePrefix.length - 1), "recentsites.json", $.toJSON(items), function(success){});
+				}
 			},
-			error : function(httpstatus){
+			error: function(xhr, textStatus, thrownError) {
 				items.items = [];
 				items.items.unshift(site);
 				
 				// Write
-				sdata.widgets.WidgetPreference.save("/_user/private/" + sdata.me.user.userStoragePrefix.substring(0, sdata.me.user.userStoragePrefix.length - 1), "recentsites.json", $.toJSON(items), function(success){});
+				if (sdata.me.user.userStoragePrefix) {
+					sdata.widgets.WidgetPreference.save("/_user/private/" + sdata.me.user.userStoragePrefix.substring(0, sdata.me.user.userStoragePrefix.length - 1), "recentsites.json", $.toJSON(items), function(success){});
+				}
 			}
 		});
 	};
@@ -626,17 +620,14 @@ sakai.site = function(){
 				
 				// is a Dashboard
 				case "dashboard":
-					if (sdata.me.user.subjects.indexOf("g-" + sakai.site.currentsite.id + "-collaborators") !== -1) {
-						$dashboard_options.show();
-					}
 					$.ajax({
 						url: sakai.site.urls.WEBPAGE_CONTENT(),
 						cache: false,
 						success: function(data){
 							displayDashboard(data, true);
 						},
-						error: function(status){
-							displayDashboard(status, false);
+						error: function(xhr, textStatus, thrownError) {
+							displayDashboard(xhr.status, false);
 						}
 					});
 					break;
@@ -651,15 +642,15 @@ sakai.site = function(){
 							response = sakai.site.ensureProperWidgetIDs(response, sakai.site.urls.WEBPAGE_CONTENT());
 							displayPage(response, true);
 						},
-						error: function(httpstatus){
-							displayPage(httpstatus, false);
+						error: function(xhr, textStatus, thrownError) {
+							displayPage(xhr.status, false);
 						}
 					});
 					break;
 			}
 		}
 	
-		if (sdata.me.user.subjects.indexOf("g-" + sakai.site.currentsite.id + "-collaborators") !== -1) {
+		if (sakai.site.isCollaborator) {
 			if (pageType === "dashboard") {
 				$dashboard_options.show();
 				$li_edit_page_divider.hide();
@@ -882,7 +873,7 @@ sakai.site = function(){
 				$.ajax({
 					url: "/sites/" + sakai.site.currentsite.id + "/_pages/" + sakai.site.selectedpage + "/content.save.html",
 					type: 'POST',
-					error: function(){
+					error: function(xhr, textStatus, thrownError) {
 						alert("Connection with the server was lost.");
 					}
 				});
@@ -1035,7 +1026,7 @@ sakai.site = function(){
 				
 				$main_content_div.append(el);
 				
-				if (sdata.me.user.subjects.indexOf("g-" + sakai.site.currentsite.id + "-collaborators") !== -1) {
+				if (sakai.site.isCollaborator) {
 				
 					var dashPageID = "#" + el.id;
 					
@@ -1350,7 +1341,8 @@ sakai.site = function(){
 			type: "POST",
 			data: {
 				"css": arrLinks,
-				"content": content
+				"content": content,
+				"_charset_":"utf-8"
 			},
 			success: function(data){
 				// Open a popup window with printable content

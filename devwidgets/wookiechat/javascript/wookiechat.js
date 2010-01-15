@@ -181,7 +181,8 @@ sakai.wookiechat = function(tuid, placement, showSettings) {
 		var oPostData = {
 			"method": "POST",
 			"url": url,
-			"post": encodeURIComponent(sDataToWookie)
+			"post": encodeURIComponent(sDataToWookie),
+			"_charset_":"utf-8"
 		};
 				
 		// The request.
@@ -193,7 +194,7 @@ sakai.wookiechat = function(tuid, placement, showSettings) {
 				// Save the date we get back to JCR.
 				createChatRoomFinished(data);
 			},
-			error: function(status) {
+			error: function(xhr, textStatus, thrownError) {
 				// For some reason we couldn't contact the wookie server.
 				showGeneralMessage(settingsMessagesContainer, $(error_unableContactWookie).text(), true, 0);
 			},
@@ -226,7 +227,7 @@ sakai.wookiechat = function(tuid, placement, showSettings) {
 				}
 				
 			},
-			error: function(data) {
+			error: function(xhr, textStatus, thrownError) {
 				$(settingsCreate).hide();
 				$(settingsAdd).show();
 			}
@@ -276,7 +277,7 @@ sakai.wookiechat = function(tuid, placement, showSettings) {
 				$(mainContainer, rootel).append(sFrame);
 				
 			},
-			error: function(status) {
+			error: function(xhr, textStatus, thrownError) {
 				showGeneralMessage(mainMessagesContainer,$(error_unableChatPrefs).text(), true, 0);
 			}
 		});

@@ -202,9 +202,14 @@ sakai.newaccount = function(){
 	var doCreateUser = function(){
 		
 		var values = getFormValues();
-		var data = {"firstName": values[firstName], "lastName": values[lastName], "email": values[email], 
-					"pwd": values[password], "pwdConfirm": values[password], ":name": values[username]};
-		
+		var data = {
+			"firstName": values[firstName],
+			"lastName": values[lastName],
+			"email": values[email], 
+			"pwd": values[password],
+			"pwdConfirm": values[password],
+			":name": values[username],
+			"_charset_": "utf-8"};
 		$.ajax ({
         	url : Config.URL.CREATE_USER_SERVICE,
         	type : "POST",
@@ -214,7 +219,7 @@ sakai.newaccount = function(){
 				$(buttonsContainer).hide();
 				$(successMessage).show();
 			},
-			error: function(data){
+		error: function(xhr, textStatus, thrownError) {
 				resetErrorFields();
 			}
 		});
@@ -230,7 +235,7 @@ sakai.newaccount = function(){
 	 */
 	var checkAllFieldsForEmpty = function(fields){
 		var totalEmpty = 0;
-		for (var i = 0; i < fields.length; i++){
+		for (var i = 0, j = fields.length; i < j; i++){
 			if (checkEmpty(fields[i].id)){
 				totalEmpty++;
 				setError(fields[i].id,fields[i].error,true);	
@@ -341,7 +346,7 @@ sakai.newaccount = function(){
             success: function(data){
 				setError(usernameField,usernameTaken);
 			}, 
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				if (checkingOnly){
 					resetErrorFields();
 					$(usernameAvailable).show();

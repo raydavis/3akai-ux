@@ -48,7 +48,7 @@ var json = {
 		"mapzoom": map.getZoom(),
 		"mapinput": "", 
 		"mapsize": "", 
-		"maphtml": "Cambridge UK"
+		"maphtml": "Cambridge, UK"
 	}]
 };
 
@@ -129,7 +129,6 @@ var getJSON = function() {
  * @param {string} The region where Google will perform the search
  */
 function search(keyword, region) {	
-	
 	
 	// If region is provided, attach it ot the search query
 	// TO DO: This later will need to be moved to the Google API

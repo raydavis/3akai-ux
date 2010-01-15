@@ -261,7 +261,9 @@ sakai.filemanager = function(tuid, placement, showSettings){
 				postData["sites@TypeHint"] = "string[]";
 
 			}
-
+			
+			postData["_charset_"] = "utf-8";
+			
 			$.ajax({
 				type: "POST",
 				data: postData,
@@ -275,7 +277,7 @@ sakai.filemanager = function(tuid, placement, showSettings){
 						showDroppedMessage(movedFiles, showDroppedMessageIn);
 					}
 				},
-				error: function(status){
+				error: function(xhr, textStatus, thrownError) {
 					alert("An error has occured");
 				}
 			});
@@ -320,7 +322,8 @@ sakai.filemanager = function(tuid, placement, showSettings){
 					$.ajax({
 						data: {
 							"tags": movedFiles.dropped,
-							":applyTo" : doSelectedFilesURLToArray()
+							":applyTo" : doSelectedFilesURLToArray(),
+							"_charset_":"utf-8"
 						},
 						type: "POST",
 						url: "/",
@@ -330,7 +333,7 @@ sakai.filemanager = function(tuid, placement, showSettings){
 							// If the post was successful, we redo the search
 							doFileSearch(options);
 						},
-						error: function(status){
+						error: function(xhr, textStatus, thrownError) {
 							alert("An error has occured");
 						}
 					});*/
@@ -443,7 +446,7 @@ sakai.filemanager = function(tuid, placement, showSettings){
 			success: function(data){
 				doFileRender($.evalJSON(data));
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured");
 			}
 		});
@@ -922,7 +925,8 @@ sakai.filemanager = function(tuid, placement, showSettings){
 		$.ajax({
 			data: {
 				":operation" : "delete",
-				":applyTo" : doSelectedFilesURLToArray()
+				":applyTo" : doSelectedFilesURLToArray(),
+				"_charset_":"utf-8"
 			},
 			type: "POST",
 			url: "/.json",
@@ -932,7 +936,7 @@ sakai.filemanager = function(tuid, placement, showSettings){
 				// If the post was successful, we redo the search
 				doFileSearch(options);
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has while deleting the files occured");
 			}
 		});
@@ -948,7 +952,7 @@ sakai.filemanager = function(tuid, placement, showSettings){
 				success: function(data){
 					alert(data);
 				},
-				error: function(status){
+				error: function(xhr, textStatus, thrownError) {
 					alert("An error has occured");
 				}
 			});

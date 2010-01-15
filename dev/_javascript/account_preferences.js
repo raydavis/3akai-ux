@@ -147,13 +147,16 @@ sakai.accountPreferences =function(){
 			$.ajax({
 				url :Config.URL.USER_CHANGEPASS_SERVICE.replace(/__USERID__/, sdata.me.user.userid),
 				type : "POST",
+				data : {"_charset_":"utf-8"},
 				success : function(data) {
 					// update the user of the successful password change
 					showGeneralMessage($(messagePassChanged).html(), false, saveNewPass, generalMessagePass);
 					// clear all the fields
 					clearPassFields();
 				},
-				error : function(status) {
+				error: function(xhr, textStatus, thrownError) {
+					var status = xhr.status;
+					
 					// the old password was incorrect
 					if(status === 409){
 						showGeneralMessage($(errorIncorrectPass).html(), true, saveNewPass, generalMessagePass);
@@ -225,7 +228,7 @@ sakai.accountPreferences =function(){
 				languages = $.evalJSON(data);	
 				putLangsinCmb(languages);
 			},
-			error: function(status){
+			error: function(xhr, textStatus, thrownError) {
 				alert("Failed to retrieve the language list.");
 			}
 		});
@@ -241,14 +244,14 @@ sakai.accountPreferences =function(){
 		$.ajax({
 			url : "/system/userManager/user/" + me.user.userid + ".update.html",
 			type : "POST",
-			
+			data : {"_charset_":"utf-8"},
 			success : function(data) {
-				// update the user of the successful reginal settings change
+				// update the user of the successful regional settings change
 				showGeneralMessage($(messageChangeLang).html(), false, saveRegional, generalMessageReg);
 			},
-			error : function(status) {
+			error: function(xhr, textStatus, thrownError) {
 				// the user is logged out
-				if(status === 401){
+				if(xhr.status === 401){
 					document.location = Config.URL.GATEWAY_URL;
 				}
 				// some other error

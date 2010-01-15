@@ -208,7 +208,20 @@ sakai.search = function() {
 		}
 		
 		if (foundSites && foundSites.results) {
+			
 			finaljson.items = foundSites.results;
+			
+			// If result is page content set up page path
+			for (var i=0, j=finaljson.items.length; i<j; i++ ) {
+				var full_path = finaljson.items[i]["path"];
+				var site_path = finaljson.items[i]["site"]["path"];
+				var page_path = site_path;
+				if (finaljson.items[i]["type"] === "sakai/pagecontent") {
+					page_path = site_path + "#" + full_path.substring((full_path.indexOf("/_pages/") + 8),full_path.lastIndexOf("/content"));
+					
+				}
+				finaljson.items[i]["pagepath"] = page_path;
+			}
 		}
 		
 		$(searchConfig.sites.searchResult).html($.Template.render(searchConfig.sites.searchResultTemplate, finaljson));
@@ -295,7 +308,7 @@ sakai.search = function() {
 				success: function(data) {
 					renderCM($.evalJSON(data));
 				},
-				error: function(status) {
+				error: function(xhr, textStatus, thrownError) {
 					renderCM({});
 				}
 			});
@@ -308,7 +321,7 @@ sakai.search = function() {
 				success: function(data) {
 					renderPeople($.evalJSON(data));
 				},
-				error: function(status) {
+				error: function(xhr, textStatus, thrownError) {
 					renderPeople({});
 				}
 			});
@@ -316,12 +329,12 @@ sakai.search = function() {
 			// Sites search
 			$.ajax({
 				cache: false,
-				url: "/var/search/sites?page=0&items=5&q=" + urlsearchterm,
+				url: Config.URL.SEARCH_CONTENT_COMPREHENSIVE + "?page=0&items=5&q=" + urlsearchterm,
 				success: function(data) {
 					var foundSites = $.evalJSON(data);
 					renderSites(foundSites);
 				},
-				error: function(status) {
+				error: function(xhr, textStatus, thrownError) {
 					renderSites({});
 				}
 			});
@@ -341,7 +354,7 @@ sakai.search = function() {
 	 */
 	var searchPerson = function(userid) {
 		var person = false;
-		for (var i = 0; i < foundPeople.length; i++) {
+		for (var i = 0, j = foundPeople.length; i<j; i++) {
 			if (foundPeople[i].userid[0] === userid) {
 				person = foundPeople[i];
 				break;

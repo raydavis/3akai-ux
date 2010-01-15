@@ -290,13 +290,7 @@ sakai.site_appearance = function() {
 
 				// Check if we are an owner for this site.
 				// Otherwise we will redirect to the site page.
-				var isMaintainer = false;
-				for (var i = 0; i < sdata.me.user.subjects.length; i++){
-					if (sdata.me.user.subjects[i] === "g-" + siteId + "-collaborators"){
-						isMaintainer = true;
-						break;
-					}
-				}
+				var isMaintainer = sakai.lib.site.authz.isUserMaintainer(siteId, sdata.me.user.subjects);
 				if (isMaintainer) {
 
 					// Fill in the info.
@@ -317,7 +311,7 @@ sakai.site_appearance = function() {
 					redirectToSitePage();
 				}	  
 			},
-			error: function(status) {
+			error: function(xhr, textStatus, thrownError) {
 				
 				// If we don't find or we are not able to get information about the current site id,
 				// we redirect the user to the gateway url.
@@ -348,8 +342,9 @@ sakai.site_appearance = function() {
 			url: "/sites/" + siteId,
 	    	type : "POST",
 	        data : {
-				"picture": stringtosave
-			},
+			"picture": stringtosave,
+			"_charset_":"utf-8"
+		},
 	        success : function(data) {
 				
 				// Update picture on the page
@@ -358,7 +353,7 @@ sakai.site_appearance = function() {
 				// Hide the layover.
 				$(siteAppearanceChangeContainer).jqmHide();
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured");
 			}
 		});
@@ -388,7 +383,7 @@ sakai.site_appearance = function() {
 					updateGroupDef();
 				//}
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured");
 			}
 		});
@@ -645,15 +640,16 @@ sakai.site_appearance = function() {
 				url: "/sites/" + siteId,
 		    	type : "POST",
 		        data : {
-					"sakai:skin":appearance.style.URL,
-					"style":appearance.style.id
-				},
+				"sakai:skin":appearance.style.URL,
+				"style":appearance.style.id,
+				"_charset_":"utf-8"
+			},
 		        success : function(data) {
 					
 					// When the save is completed we redirect the user back to the main site page
 					redirectToSitePage();
 				},
-				error : function(data){
+				error: function(xhr, textStatus, thrownError) {
 					alert("An error has occured");
 				}
 			});
@@ -743,14 +739,15 @@ sakai.site_appearance = function() {
 			url: "/sites/" + siteId,
 	    	type : "POST",
 	        data : {
-				"picture": stringtosave
-			},
+			"picture": stringtosave,
+			"_charset_":"utf-8"
+		},
 	        success : function(data) {
 				
 				// When the save is completed we initialize the site appearance pop-up again
 				sakai.site_appearance_change.doInit();	
 			},
-			error : function(data){
+			error: function(xhr, textStatus, thrownError) {
 				alert("An error has occured");
 			}
 		});

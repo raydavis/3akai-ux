@@ -150,7 +150,7 @@ sakai.wookieforum = function(tuid, placement, showSettings){
 				$(mainContainer, rootel).append(sFrame);
         	   
    			},
-   			error : function(status) {
+   			error: function(xhr, textStatus, thrownError) {
    				showGeneralMessage(mainMessagesContainer, $(error_unableforumPrefs).text(), true, 0);
    			}
    		});
@@ -212,7 +212,7 @@ sakai.wookieforum = function(tuid, placement, showSettings){
 		var sDataToWookie = "userid=" + me.profile.firstName + '-' + me.profile.lastName + "&shareddatakey=" + sharedDataKey + "&servicetype=forum&requestid=getwidget";                 
     	
 		//	The data we are going to send to the proxy
-		var oPostData = {"method" : "POST", "url" : url, "post" : encodeURIComponent(sDataToWookie)};
+		var oPostData = {"method" : "POST", "url" : url, "post" : encodeURIComponent(sDataToWookie),"_charset_":"utf-8"};
         
 		//	The request
         $.ajax({
@@ -221,7 +221,7 @@ sakai.wookieforum = function(tuid, placement, showSettings){
             success : function(data) {
 				createForumFinished(data);
             },
-            error : function(status) {
+            error: function(xhr, textStatus, thrownError) {
 				showGeneralMessage(settingsMessagesContainer, $(error_unableContactWookie).text(), true, 0);
             },
             data : oPostData
@@ -253,7 +253,7 @@ sakai.wookieforum = function(tuid, placement, showSettings){
 				}
 				
 			},
-			error: function(data) {
+			error: function(xhr, textStatus, thrownError) {
 				$(settingsCreate).hide();
 				$(settingsAdd).show();
 			}

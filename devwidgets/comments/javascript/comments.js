@@ -343,8 +343,8 @@ sakai.comments = function(tuid, placement, showSettings) {
                 json = $.evalJSON(data);
                 showComments();
             },
-            error: function(status) {
-                alert("comments: An error occured while receiving the comments (" + status + ")");
+            error: function(xhr, textStatus, thrownError) {
+                alert("comments: An error occured while receiving the comments (" + xhr.status + ")");
             }
         });
     };
@@ -413,13 +413,14 @@ sakai.comments = function(tuid, placement, showSettings) {
         if (allowPost) {
             var body = $(commentsMessageTxt, rootel).val();
             var message = {
-                'sakai:type': 'comment',
-                'sakai:to': to,
-				'sakai:marker': tuid,
-				'sakai:subject': subject,
-                'sakai:body': body,
-                'sakai:messagebox': 'outbox',
-				'sakai:sendstate' : 'pending'
+                "sakai:type": "comment",
+                "sakai:to": to,
+		"sakai:marker": tuid,
+		"sakai:subject": subject,
+                "sakai:body": body,
+                "sakai:messagebox": "outbox",
+		"sakai:sendstate" : "pending",
+		"_charset_":"utf-8"
             };
             
             
@@ -438,8 +439,8 @@ sakai.comments = function(tuid, placement, showSettings) {
                     // Get the comments.
                     getComments();
                 },
-                error: function(status) {
-                    if (status === 401) {
+                error: function(xhr, textStatus, thrownError) {
+                    if (xhr.status === 401) {
                         alert("You are not allowed to add comments.");
                     }
                     else {
@@ -569,7 +570,7 @@ sakai.comments = function(tuid, placement, showSettings) {
                 
                 var isLoggedIn = (me.user.anon && me.user.anon === true) ? false : true;
                 if (widgetSettings["sakai:allowanonymous"] === false && !isLoggedIn) {
-                    $(commentsCommentBtn, rootel).hide();
+                    $(commentsCommentBtn, rootel).parent().hide();
                 }
                 
                 if (showSettings) {
@@ -579,9 +580,9 @@ sakai.comments = function(tuid, placement, showSettings) {
                     pagerClickHandler(1);
                 }
             },
-            error: function(status) {
+            error: function(xhr, textStatus, thrownError) {
                 if (showSettings) {
-                    showSettingScreen(false, status);
+                    showSettingScreen(false, xhr.status);
                 }
                 else {
                     pagerClickHandler(1);
@@ -617,7 +618,8 @@ sakai.comments = function(tuid, placement, showSettings) {
         // If the settings-input is valid an object will be returned else false will be returned
         var settings = getCommentsSettings();
         if (settings) {
-            var saveUrl = Config.URL.SDATA_FETCH_URL.replace(/__PLACEMENT__/, placement).replace(/__TUID__/, tuid).replace(/__NAME__/, "settings");
+            settings["_charset_"] = "utf-8";
+	    var saveUrl = Config.URL.SDATA_FETCH_URL.replace(/__PLACEMENT__/, placement).replace(/__TUID__/, tuid).replace(/__NAME__/, "settings");
             // gets the JSON-settings-object and converts it to a string
             
             $.ajax({
@@ -627,7 +629,7 @@ sakai.comments = function(tuid, placement, showSettings) {
                 success: function(data) {
                     finishNewSettings();
                 },
-                error: function(status) {
+                error: function(xhr, textStatus, thrownError) {
                     alert("Failed to save.");
                 },
                 data: settings
@@ -702,7 +704,7 @@ sakai.comments = function(tuid, placement, showSettings) {
             success: function() {
                 getComments();
             },
-            error: function() {
+            error: function(xhr, textStatus, thrownError) {
                 alert("Failed to (un)delete the post.");
             },
             data: data
@@ -758,7 +760,7 @@ sakai.comments = function(tuid, placement, showSettings) {
                     $(commentsMessageEditContainer + id, rootel).hide();
                     $(commentsMessage + id, rootel).show();
                 },
-                error: function(status) {
+                error: function(xhr, textStatus, thrownError) {
                     alert("Failed to edit comment.");
                 },
                 data: data
